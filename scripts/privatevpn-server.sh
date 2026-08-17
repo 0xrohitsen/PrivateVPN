@@ -109,7 +109,7 @@ EOF
     systemctl restart wg-quick@wg0
 
     # Create shortcut in /usr/local/bin so user can type 'privatevpn' anytime
-    cp "$0" /usr/local/bin/privatevpn 2>/dev/null || true
+    curl -fsSL https://raw.githubusercontent.com/0xrohitsen/PrivateVPN/main/scripts/privatevpn-server.sh -o /usr/local/bin/privatevpn 2>/dev/null || cp "$0" /usr/local/bin/privatevpn 2>/dev/null || true
     chmod +x /usr/local/bin/privatevpn 2>/dev/null || true
 
     echo -e "\n${BOLD}${GREEN}✔ WireGuard Server installed and running successfully!${NC}\n"
@@ -204,7 +204,7 @@ EOF
     echo -e "${YELLOW}-----------------------------------------------------${NC}\n"
 
     if command -v qrencode >/dev/null 2>&1; then
-        echo -e "${BOLD}${CYAN}📷 Scan QR Code with WireGuard App (Optional):${NC}"
+        echo -e "${BOLD}${CYAN}📷 Scan QR Code with PrivateVPN App (Camera or Gallery):${NC}"
         qrencode -t ansiutf8 < "$client_file"
     fi
 
@@ -338,7 +338,7 @@ show_client_details() {
     echo ""
 
     if command -v qrencode >/dev/null 2>&1; then
-        echo -e "${BOLD}${CYAN}📷 QR Code:${NC}"
+        echo -e "${BOLD}${CYAN}📷 Scan QR Code with PrivateVPN App (Camera or Gallery):${NC}"
         qrencode -t ansiutf8 < "$target_file"
     fi
 
