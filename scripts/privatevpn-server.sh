@@ -7,6 +7,11 @@
 
 set -e
 
+# Re-attach standard input to terminal if executed via curl | bash
+if [ ! -t 0 ] && [ -c /dev/tty ]; then
+    exec < /dev/tty
+fi
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -38,7 +43,7 @@ get_net_iface() {
 }
 
 header() {
-    clear
+    clear 2>/dev/null || true
     echo -e "${BOLD}${CYAN}=====================================================${NC}"
     echo -e "${BOLD}${CYAN}          PrivateVPN — Server Manager                ${NC}"
     echo -e "${BOLD}${CYAN}=====================================================${NC}"
@@ -65,7 +70,7 @@ install_wireguard() {
     apt-get update -qq
 
     echo -e "${GREEN}[2/5] Installing WireGuard, iptables, qrencode...${NC}"
-    DEBIAN_FRONTEND=noninteractive apt-get install -y -qq wireguard wireguard-tools iptables qrencode curl
+    DEBIAN_FRONTEND=noninteractive apt-get install -y -qq wireguard wireguard-tools iptables qrencode curl python3
 
     echo -e "${GREEN}[3/5] Enabling IPv4 forwarding...${NC}"
     echo "net.ipv4.ip_forward=1" > /etc/sysctl.d/99-wireguard.conf
@@ -103,6 +108,10 @@ EOF
     systemctl enable wg-quick@wg0 >/dev/null 2>&1
     systemctl restart wg-quick@wg0
 
+    # Create shortcut in /usr/local/bin so user can type 'privatevpn' anytime
+    cp "$0" /usr/local/bin/privatevpn 2>/dev/null || true
+    chmod +x /usr/local/bin/privatevpn 2>/dev/null || true
+
     echo -e "\n${BOLD}${GREEN}✔ WireGuard Server installed and running successfully!${NC}\n"
     
     # Automatically create the first client
@@ -127,11 +136,11 @@ add_client() {
     if [ -z "$client_name" ]; then
         header
         echo -e "${BOLD}${CYAN}>>> Add New Android Client Device${NC}\n"
-        read -p "Enter device name (e.g. Pixel8, Tablet, Phone2): " client_name
+        read -r -p "Enter device name (e.g. Pixel8, Tablet, Phone2): " client_name
         client_name=$(echo "$client_name" | tr -cd '[:alnum:]_-')
         if [ -z "$client_name" ]; then
             echo -e "${RED}[ERROR] Invalid device name.${NC}"
-            read -p "Press Enter to return to menu..."
+            read -r -p "Press Enter to return to menu..." _
             return
         fi
     fi
@@ -139,7 +148,7 @@ add_client() {
     local client_file="${CLIENTS_DIR}/${client_name}.conf"
     if [ -f "$client_file" ]; then
         echo -e "${RED}[ERROR] Device '$client_name' already exists!${NC}"
-        read -p "Press Enter to return to menu..."
+        read -r -p "Press Enter to return to menu..." _
         return
     fi
 
@@ -200,8 +209,8 @@ EOF
     fi
 
     echo -e "\n${GREEN}Saved config file:${NC} ${client_file}"
-    echo ""
-    read -p "Press Enter to return to menu..."
+    echo -e "\n${CYAN}Tip:${NC} You can run ${BOLD}privatevpn${NC} or ${BOLD}bash privatevpn-server.sh${NC} anytime to manage clients.\n"
+    read -r -p "Press Enter to return to menu..." _
 }
 
 list_clients() {
@@ -226,7 +235,7 @@ list_clients() {
         fi
     fi
     echo ""
-    read -p "Press Enter to return to menu..."
+    read -r -p "Press Enter to return to menu..." _
 }
 
 remove_client() {
@@ -235,7 +244,7 @@ remove_client() {
 
     if [ ! -d "$CLIENTS_DIR" ] || [ -z "$(ls -A "$CLIENTS_DIR" 2>/dev/null)" ]; then
         echo -e "${YELLOW}No client profiles found to remove.${NC}"
-        read -p "Press Enter to return to menu..."
+        read -r -p "Press Enter to return to menu..." _
         return
     fi
 
@@ -251,16 +260,15 @@ remove_client() {
     done
 
     echo ""
-    read -p "Select client number to remove (1-$((i-1))) [or 0 to cancel]: " choice
+    read -r -p "Select client number to remove (1-$((i-1))) [or 0 to cancel]: " choice
     if [ "$choice" = "0" ] || [ -z "${client_map[$choice]}" ]; then
         echo "Cancelled."
-        read -p "Press Enter to return to menu..."
+        read -r -p "Press Enter to return to menu..." _
         return
     fi
 
     local target_name="${client_map[$choice]}"
     local target_file="${CLIENTS_DIR}/${target_name}.conf"
-    local client_pub=$(grep PublicKey "$target_file" 2>/dev/null || true) # wait, peer pub key in client file is server pub key
 
     # Get client public key by calculating from client private key
     local client_priv=$(grep PrivateKey "$target_file" | awk '{print $3}')
@@ -289,7 +297,7 @@ PYEOF
     rm -f "$target_file"
 
     echo -e "\n${BOLD}${GREEN}✔ Device '${target_name}' revoked and removed successfully!${NC}\n"
-    read -p "Press Enter to return to menu..."
+    read -r -p "Press Enter to return to menu..." _
 }
 
 show_client_details() {
@@ -298,7 +306,7 @@ show_client_details() {
 
     if [ ! -d "$CLIENTS_DIR" ] || [ -z "$(ls -A "$CLIENTS_DIR" 2>/dev/null)" ]; then
         echo -e "${YELLOW}No client profiles found.${NC}"
-        read -p "Press Enter to return to menu..."
+        read -r -p "Press Enter to return to menu..." _
         return
     fi
 
@@ -314,10 +322,10 @@ show_client_details() {
     done
 
     echo ""
-    read -p "Select number (1-$((i-1))): " choice
+    read -r -p "Select number (1-$((i-1))): " choice
     if [ -z "${client_map[$choice]}" ]; then
         echo "Invalid selection."
-        read -p "Press Enter to return to menu..."
+        read -r -p "Press Enter to return to menu..." _
         return
     fi
 
@@ -335,7 +343,7 @@ show_client_details() {
     fi
 
     echo ""
-    read -p "Press Enter to return to menu..."
+    read -r -p "Press Enter to return to menu..." _
 }
 
 restart_wireguard() {
@@ -343,7 +351,7 @@ restart_wireguard() {
     echo -e "${BOLD}${YELLOW}>>> Restarting WireGuard Server...${NC}\n"
     systemctl restart wg-quick@wg0
     echo -e "${GREEN}✔ WireGuard server restarted successfully!${NC}\n"
-    read -p "Press Enter to return to menu..."
+    read -r -p "Press Enter to return to menu..." _
 }
 
 uninstall_wireguard() {
@@ -352,10 +360,10 @@ uninstall_wireguard() {
     echo -e "${BOLD}${RED}        WARNING: UNINSTALL WIREGUARD SERVER          ${NC}"
     echo -e "${BOLD}${RED}=====================================================${NC}\n"
     echo -e "This will remove WireGuard, configuration files, and client keys.\n"
-    read -p "Are you sure you want to completely uninstall? (yes/no): " confirm
+    read -r -p "Are you sure you want to completely uninstall? (yes/no): " confirm
     if [ "$confirm" != "yes" ]; then
         echo "Uninstall cancelled."
-        read -p "Press Enter to return to menu..."
+        read -r -p "Press Enter to return to menu..." _
         return
     fi
 
@@ -368,55 +376,46 @@ uninstall_wireguard() {
     apt-get autoremove -y 2>/dev/null || true
 
     echo -e "${YELLOW}Cleaning configuration files...${NC}"
-    rm -rf /etc/wireguard /etc/sysctl.d/99-wireguard.conf
+    rm -rf /etc/wireguard /etc/sysctl.d/99-wireguard.conf /usr/local/bin/privatevpn
 
     echo -e "\n${BOLD}${GREEN}✔ WireGuard server has been completely uninstalled.${NC}\n"
     exit 0
 }
 
-# ----------------- MAIN MENU -----------------
-main_menu() {
+# ----------------- MAIN ENTRYPOINT -----------------
+main() {
+    if ! is_installed; then
+        install_wireguard
+    fi
+
     while true; do
         header
-        if ! is_installed; then
-            echo -e "${YELLOW}WireGuard is not installed on this system.${NC}\n"
-            echo -e "  ${BOLD}1)${NC} ${GREEN}Install & Setup WireGuard Server (1-Click)${NC}"
-            echo -e "  ${BOLD}2)${NC} Exit"
-            echo ""
-            read -p "Choose option [1-2]: " opt
-            case $opt in
-                1) install_wireguard ;;
-                2) exit 0 ;;
-                *) echo "Invalid option." ;;
-            esac
-        else
-            SERVER_PUB_IP=$(get_public_ip)
-            ACTIVE_PEERS=$(wg show wg0 peers 2>/dev/null | wc -l || echo "0")
-            echo -e "${BOLD}Server IP:${NC} ${CYAN}${SERVER_PUB_IP}${NC} | ${BOLD}Port:${NC} ${CYAN}${WG_PORT}${NC} | ${BOLD}Status:${NC} ${GREEN}ACTIVE${NC}"
-            echo -e "${BOLD}Configured Peers:${NC} ${PURPLE}${ACTIVE_PEERS}${NC}"
-            echo -e "${YELLOW}-----------------------------------------------------${NC}"
-            echo -e "  ${BOLD}1)${NC} ${GREEN}➕ Add / Generate New Device Client${NC}"
-            echo -e "  ${BOLD}2)${NC} ${CYAN}📊 List Connected Devices & Live Traffic Stats${NC}"
-            echo -e "  ${BOLD}3)${NC} ${YELLOW}🔍 View Device Config & QR Code${NC}"
-            echo -e "  ${BOLD}4)${NC} ${RED}🗑️  Remove / Revoke Device Client${NC}"
-            echo -e "  ${BOLD}5)${NC} 🔄 Restart WireGuard Server"
-            echo -e "  ${BOLD}6)${NC} ⚠️  Uninstall WireGuard Server"
-            echo -e "  ${BOLD}7)${NC} 🚪 Exit"
-            echo -e "${YELLOW}-----------------------------------------------------${NC}"
-            echo ""
-            read -p "Choose an option [1-7]: " choice
-            case $choice in
-                1) add_client "" ;;
-                2) list_clients ;;
-                3) show_client_details ;;
-                4) remove_client ;;
-                5) restart_wireguard ;;
-                6) uninstall_wireguard ;;
-                7) exit 0 ;;
-                *) echo "Invalid option." ;;
-            esac
-        fi
+        SERVER_PUB_IP=$(get_public_ip)
+        ACTIVE_PEERS=$(wg show wg0 peers 2>/dev/null | wc -l || echo "0")
+        echo -e "${BOLD}Server IP:${NC} ${CYAN}${SERVER_PUB_IP}${NC} | ${BOLD}Port:${NC} ${CYAN}${WG_PORT}${NC} | ${BOLD}Status:${NC} ${GREEN}ACTIVE${NC}"
+        echo -e "${BOLD}Configured Peers:${NC} ${PURPLE}${ACTIVE_PEERS}${NC}"
+        echo -e "${YELLOW}-----------------------------------------------------${NC}"
+        echo -e "  ${BOLD}1)${NC} ${GREEN}➕ Add / Generate New Device Client${NC}"
+        echo -e "  ${BOLD}2)${NC} ${CYAN}📊 List Connected Devices & Live Traffic Stats${NC}"
+        echo -e "  ${BOLD}3)${NC} ${YELLOW}🔍 View Device Config & QR Code${NC}"
+        echo -e "  ${BOLD}4)${NC} ${RED}🗑️  Remove / Revoke Device Client${NC}"
+        echo -e "  ${BOLD}5)${NC} 🔄 Restart WireGuard Server"
+        echo -e "  ${BOLD}6)${NC} ⚠️  Uninstall WireGuard Server"
+        echo -e "  ${BOLD}7)${NC} 🚪 Exit"
+        echo -e "${YELLOW}-----------------------------------------------------${NC}"
+        echo ""
+        read -r -p "Choose an option [1-7]: " choice
+        case $choice in
+            1) add_client "" ;;
+            2) list_clients ;;
+            3) show_client_details ;;
+            4) remove_client ;;
+            5) restart_wireguard ;;
+            6) uninstall_wireguard ;;
+            7) exit 0 ;;
+            *) echo "Invalid option." ;;
+        esac
     done
 }
 
-main_menu
+main
