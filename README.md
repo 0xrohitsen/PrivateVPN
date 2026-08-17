@@ -3,9 +3,16 @@
 [![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
 [![Android](https://img.shields.io/badge/Android-10%2B-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![WireGuard](https://img.shields.io/badge/WireGuard-GoBackend-88171A?logo=wireguard&logoColor=white)](https://www.wireguard.com)
+[![Release](https://img.shields.io/github/v/release/0xrohitsen/PrivateVPN?color=purple)](https://github.com/0xrohitsen/PrivateVPN/releases/latest)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 **PrivateVPN** is an ultra-fast, modern, privacy-first WireGuard VPN client and server suite. Built from the ground up for self-hosters who demand total control over their data, zero logs, per-app routing, and multi-device management.
+
+<p align="center">
+  <a href="https://github.com/0xrohitsen/PrivateVPN/releases/download/v1.0.0/PrivateVPN-v1.0.0.apk">
+    <img src="https://img.shields.io/badge/📥_Download_APK-v1.0.0-6C5CE7?style=for-the-badge&logo=android&logoColor=white" alt="Download APK" height="42">
+  </a>
+</p>
 
 ---
 
@@ -83,7 +90,13 @@ Choose an option [1-7]:
 
 ## 📱 Android App Setup
 
-### Method 1: 1-Click `.conf` Import (Recommended)
+### 📥 1. Download & Install APK
+- Download the latest signed APK: **[PrivateVPN-v1.0.0.apk](https://github.com/0xrohitsen/PrivateVPN/releases/download/v1.0.0/PrivateVPN-v1.0.0.apk)** (or from the [Releases Page](https://github.com/0xrohitsen/PrivateVPN/releases)).
+- Open and install on your phone.
+
+### ⚙️ 2. Configuration Options
+
+#### Method 1: 1-Click `.conf` Import (Recommended)
 1. In the terminal output from the server script, copy the `[Interface]` `.conf` text.
 2. In the PrivateVPN app, tap **Settings (⚙️)** → **Import / Export**.
 3. Paste the configuration and tap **Save**.
