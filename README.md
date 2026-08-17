@@ -93,8 +93,9 @@
 Run this one-line command on your Ubuntu (20.04/22.04/24.04/26.04) or Debian VPS as `root`:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/0xrohitsen/PrivateVPN/main/scripts/privatevpn-server.sh | sudo bash
+bash <(curl -fsSL https://raw.githubusercontent.com/0xrohitsen/PrivateVPN/main/scripts/privatevpn-server.sh)
 ```
+*(Or via wget: `wget -O setup.sh https://raw.githubusercontent.com/0xrohitsen/PrivateVPN/main/scripts/privatevpn-server.sh && sudo bash setup.sh`)*
 
 ### 🎮 Interactive Server Control Panel
 
