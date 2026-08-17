@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../models/vpn_config.dart';
 import '../providers/vpn_controller.dart';
 import '../theme/app_theme.dart';
+import 'qr_scanner_screen.dart';
 
 class ServerConfigScreen extends StatefulWidget {
   const ServerConfigScreen({super.key});
@@ -45,6 +46,48 @@ class _ServerConfigScreenState extends State<ServerConfigScreen> {
     _clientPrivateKeyController.dispose();
     _dnsController.dispose();
     super.dispose();
+  }
+
+  Future<void> _scanQrCode() async {
+    final result = await Navigator.of(context).push<String>(
+      MaterialPageRoute(builder: (_) => const QrScannerScreen()),
+    );
+    if (result != null && result.trim().isNotEmpty && mounted) {
+      try {
+        final parsed = VpnConfig.fromWgQuick(result.trim());
+        setState(() {
+          if (parsed.clientPrivateKey.isNotEmpty) {
+            _clientPrivateKeyController.text = parsed.clientPrivateKey;
+          }
+          if (parsed.clientAddress.isNotEmpty) {
+            _clientAddressController.text = parsed.clientAddress;
+          }
+          if (parsed.dns.isNotEmpty) {
+            _dnsController.text = parsed.dns;
+          }
+          if (parsed.serverPublicKey.isNotEmpty) {
+            _serverPublicKeyController.text = parsed.serverPublicKey;
+          }
+          if (parsed.serverEndpoint.isNotEmpty) {
+            _serverEndpointController.text = parsed.serverEndpoint;
+          }
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('WireGuard QR Code imported successfully!'),
+            backgroundColor: AppColors.connected,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to parse QR Code: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
   }
 
   void _saveConfig() {
@@ -138,13 +181,13 @@ class _ServerConfigScreenState extends State<ServerConfigScreen> {
                       icon: const Icon(Icons.copy_rounded, size: 16),
                       label: const Text('Copy .conf'),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.primary,
-                        side: const BorderSide(color: AppColors.primary),
+                        foregroundColor: AppColors.textPrimary,
+                        side: const BorderSide(color: AppColors.surfaceBorder),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
                       onPressed: () {
-                        Clipboard.setData(ClipboardData(
-                            text: importExportTextController.text));
+                        Clipboard.setData(ClipboardData(text: importExportTextController.text));
+                        Navigator.of(ctx).pop();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('Configuration copied to clipboard'),
@@ -193,6 +236,7 @@ class _ServerConfigScreenState extends State<ServerConfigScreen> {
                             const SnackBar(
                               content: Text('Configuration imported successfully'),
                               backgroundColor: AppColors.connected,
+                              duration: Duration(seconds: 2),
                             ),
                           );
                         } catch (e) {
@@ -222,6 +266,11 @@ class _ServerConfigScreenState extends State<ServerConfigScreen> {
         title: const Text('Server Configuration'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.qr_code_scanner_rounded, color: Colors.purpleAccent),
+            tooltip: 'Scan WireGuard QR Code',
+            onPressed: _scanQrCode,
+          ),
+          IconButton(
             icon: const Icon(Icons.code_rounded),
             tooltip: 'Raw Config Import/Export',
             onPressed: _showImportExportModal,
@@ -236,6 +285,57 @@ class _ServerConfigScreenState extends State<ServerConfigScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Scan QR Quick Button Card
+                InkWell(
+                  onTap: _scanQrCode,
+                  borderRadius: BorderRadius.circular(14),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.purpleAccent.withValues(alpha: 0.25),
+                          AppColors.primary.withValues(alpha: 0.15),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: Colors.purpleAccent.withValues(alpha: 0.5)),
+                    ),
+                    child: const Row(
+                      children: [
+                        Icon(Icons.qr_code_scanner_rounded, color: Colors.purpleAccent, size: 28),
+                        SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Scan WireGuard QR Code',
+                                style: TextStyle(
+                                  color: AppColors.textPrimary,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              SizedBox(height: 2),
+                              Text(
+                                'Instantly auto-fill configuration from terminal QR',
+                                style: TextStyle(
+                                  color: AppColors.textSecondary,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(Icons.arrow_forward_ios_rounded, size: 16, color: Colors.purpleAccent),
+                      ],
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
                 // Info banner
                 Container(
                   padding: const EdgeInsets.all(14),
