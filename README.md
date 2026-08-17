@@ -36,6 +36,20 @@
 
 ---
 
+## 📸 App Screenshots
+
+<p align="center">
+  <img src="assets/screenshots/01_home_screen.png" width="23%" alt="Home Screen" style="border-radius: 14px; margin: 4px;">
+  &nbsp;
+  <img src="assets/screenshots/02_server_config.png" width="23%" alt="Server Configuration" style="border-radius: 14px; margin: 4px;">
+  &nbsp;
+  <img src="assets/screenshots/04_per_app_filter.png" width="23%" alt="Per-App VPN Filter" style="border-radius: 14px; margin: 4px;">
+  &nbsp;
+  <img src="assets/screenshots/03_import_export.png" width="23%" alt="Import Export .conf" style="border-radius: 14px; margin: 4px;">
+</p>
+
+---
+
 ## 🌟 Highlights
 
 - 🚀 **100% Self-Hosted & Zero Logs:** Your private server, your encryption keys, zero third-party intermediaries.
