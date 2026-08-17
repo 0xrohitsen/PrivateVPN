@@ -1,35 +1,55 @@
-# 🛡️ PrivateVPN — Self-Hosted WireGuard VPN for Android
+<p align="center">
+  <img src="assets/images/logo.png" alt="PrivateVPN Logo" width="90" height="90" style="border-radius: 20px;">
+</p>
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
-[![Android](https://img.shields.io/badge/Android-10%2B-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
-[![WireGuard](https://img.shields.io/badge/WireGuard-GoBackend-88171A?logo=wireguard&logoColor=white)](https://www.wireguard.com)
-[![Release](https://img.shields.io/github/v/release/0xrohitsen/PrivateVPN?color=purple)](https://github.com/0xrohitsen/PrivateVPN/releases/latest)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+<h1 align="center">PrivateVPN</h1>
 
-**PrivateVPN** is an ultra-fast, modern, privacy-first WireGuard VPN client and server suite. Built from the ground up for self-hosters who demand total control over their data, zero logs, per-app routing, and multi-device management.
+<p align="center">
+  <strong>Fast, Self-Hosted, Privacy-First WireGuard® VPN for Android</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/0xrohitsen/PrivateVPN/releases/latest">
+    <img src="https://img.shields.io/github/v/release/0xrohitsen/PrivateVPN?style=for-the-badge&color=7C3AED&label=RELEASE" alt="Release">
+  </a>
+  <a href="https://github.com/0xrohitsen/PrivateVPN/blob/main/LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="License">
+  </a>
+  <img src="https://img.shields.io/badge/Android-10%2B-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Android">
+  <img src="https://img.shields.io/badge/Flutter-3.x-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter">
+  <img src="https://img.shields.io/badge/WireGuard-GoBackend-88171A?style=for-the-badge&logo=wireguard&logoColor=white" alt="WireGuard">
+</p>
+
+<br>
 
 <p align="center">
   <a href="https://github.com/0xrohitsen/PrivateVPN/releases/download/v1.0.0/PrivateVPN-v1.0.0.apk">
-    <img src="https://img.shields.io/badge/📥_Download_APK-v1.0.0-6C5CE7?style=for-the-badge&logo=android&logoColor=white" alt="Download APK" height="42">
+    <img src="https://img.shields.io/badge/⚡_DOWNLOAD_APK-v1.0.0_DIRECT-7C3AED?style=for-the-badge&logo=android&logoColor=white" alt="Download APK" height="46">
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://github.com/0xrohitsen/PrivateVPN/releases/latest">
+    <img src="https://img.shields.io/badge/📦_ALL_RELEASES-GITHUB-181717?style=for-the-badge&logo=github&logoColor=white" alt="All Releases" height="46">
   </a>
 </p>
 
+<br>
+
 ---
 
-## ✨ Features
+## 🌟 Highlights
 
-- 🚀 **100% Self-Hosted & Zero Logs:** Your server, your encryption keys, zero intermediary tracking.
-- ⚡ **WireGuard Native Performance:** Powered by the official Android `GoBackend` for blazing speeds and minimal battery consumption.
+- 🚀 **100% Self-Hosted & Zero Logs:** Your private server, your encryption keys, zero third-party intermediaries.
+- ⚡ **WireGuard Native Performance:** Powered by the official Android `GoBackend` engine for peak speed, minimal ping, and battery efficiency.
 - 🎛️ **Per-App VPN Filter (Split Tunneling):** Choose precisely which apps route through your VPS and which apps bypass the VPN.
-- 🔄 **Auto-Recovery & Reconnect:** Application singleton architecture ensures the tunnel state seamlessly persists across app backgrounding, task swiping, and reboots.
-- 👥 **Multi-Device Server Manager:** 1-Click interactive script to generate, manage, list, and revoke configurations for up to dozens of client devices.
-- 🎨 **Modern Dark UI:** Material 3 design system with live connection timers, real-time public IP resolver, and connection pulse animations.
+- 🔄 **Tunnel State Recovery:** Built with process-level singleton management so tunnel states never drop when swiping from recent apps.
+- 👥 **Multi-Device Server Manager:** 1-Click interactive script to generate, manage, list, and revoke configurations for all your devices.
+- 🎨 **Material 3 Dark UI:** Sleek UI with live duration timers, live public IP resolver, and connection animations.
 
 ---
 
 ## 🏗️ Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    PrivateVPN Android App                   │
 ├─────────────────────────┬───────────────────────────────────┤
@@ -56,17 +76,15 @@
 
 ## ⚡ 1-Minute Server Setup (Ubuntu / Debian VPS)
 
-Run this one-line command on your Ubuntu (20.04/22.04/24.04/26.04) or Debian server as `root`:
+Run this one-line command on your Ubuntu (20.04/22.04/24.04/26.04) or Debian VPS as `root`:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/0xrohitsen/PrivateVPN/main/scripts/privatevpn-server.sh | sudo bash
 ```
 
-*(Alternatively, clone the repository and run `sudo bash scripts/privatevpn-server.sh`)*
+### 🎮 Interactive Server Control Panel
 
-### 🎮 Interactive Server Management Menu
-
-Running the script anytime brings up the server control panel:
+Running the script anytime brings up the interactive control panel:
 
 ```text
 =====================================================
@@ -91,17 +109,17 @@ Choose an option [1-7]:
 ## 📱 Android App Setup
 
 ### 📥 1. Download & Install APK
-- Download the latest signed APK: **[PrivateVPN-v1.0.0.apk](https://github.com/0xrohitsen/PrivateVPN/releases/download/v1.0.0/PrivateVPN-v1.0.0.apk)** (or from the [Releases Page](https://github.com/0xrohitsen/PrivateVPN/releases)).
+- Download the latest signed release: **[PrivateVPN-v1.0.0.apk](https://github.com/0xrohitsen/PrivateVPN/releases/download/v1.0.0/PrivateVPN-v1.0.0.apk)**
 - Open and install on your phone.
 
 ### ⚙️ 2. Configuration Options
 
 #### Method 1: 1-Click `.conf` Import (Recommended)
-1. In the terminal output from the server script, copy the `[Interface]` `.conf` text.
+1. Copy the `.conf` generated by the VPS server script.
 2. In the PrivateVPN app, tap **Settings (⚙️)** → **Import / Export**.
 3. Paste the configuration and tap **Save**.
 
-### Method 2: Manual Credentials Entry
+#### Method 2: Manual Credentials Entry
 In **Settings (⚙️)**, enter the generated credentials:
 - **Server Endpoint:** `YOUR_SERVER_IP:51820`
 - **Server Public Key:** `Server public key from setup`
@@ -118,48 +136,30 @@ In **Settings (⚙️)**, enter the generated credentials:
 - Android SDK (API level 34+)
 - JDK 17
 
-### 1. Clone the repository
 ```bash
+# 1. Clone the repository
 git clone https://github.com/0xrohitsen/PrivateVPN.git
 cd PrivateVPN
-```
 
-### 2. Install dependencies
-```bash
+# 2. Install dependencies
 flutter pub get
+
+# 3. Build Signed Release APK
+flutter build apk --release
 ```
 
-### 3. Build Debug APK
-```bash
-flutter build apk --debug
-```
-
-### 4. Build Signed Release APK
-1. Create `android/key.properties` from the template:
-   ```bash
-   cp android/key.properties.example android/key.properties
-   ```
-2. Generate your release keystore:
-   ```bash
-   keytool -genkey -v -keystore android/app/privatevpn-release.jks -keyalg RSA -keysize 2048 -validity 10000 -alias privatevpn
-   ```
-3. Fill in your passwords and alias in `android/key.properties`.
-4. Compile the signed release APK:
-   ```bash
-   flutter build apk --release
-   ```
-   Output: `build/app/outputs/flutter-apk/app-release.apk`
+Output APK will be generated at: `build/app/outputs/flutter-apk/app-release.apk`
 
 ---
 
 ## 🔒 Security & Privacy
 
-- **No Third-Party Trackers:** No analytics SDKs, no ad networks, no external tracking.
-- **Cryptographic Security:** Uses WireGuard's state-of-the-art cryptography (Noise protocol framework, Curve25519, ChaCha20, Poly1305, BLAKE2s).
-- **Hardened IP Forwarding:** Firewall rules strictly enforce isolation and forward only legitimate WireGuard subnet packets (`10.8.0.0/24`) through NAT Masquerading.
+- **No Third-Party Trackers:** Zero telemetry, no ad networks, no data collection.
+- **Cryptographic Security:** Built strictly with WireGuard standard cryptography (Noise protocol framework, Curve25519, ChaCha20, Poly1305, BLAKE2s).
+- **Isolated Routing:** Firewall isolation guarantees that only client traffic (`10.8.0.0/24`) is routed through NAT Masquerading.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+This project is open-source software licensed under the [MIT License](LICENSE).
