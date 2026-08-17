@@ -122,9 +122,20 @@ Choose an option [1-7]:
 
 ## 📱 Android App Setup
 
-### 📥 1. Download & Install APK
-- Download the latest signed release: **[PrivateVPN-v1.0.0.apk](https://github.com/0xrohitsen/PrivateVPN/releases/download/v1.0.0/PrivateVPN-v1.0.0.apk)**
-- Open and install on your phone.
+### 📥 1. Download Official APK
+
+<p align="left">
+  <a href="https://github.com/0xrohitsen/PrivateVPN/releases/download/v1.0.0/PrivateVPN-v1.0.0.apk">
+    <img src="https://img.shields.io/badge/📲_DOWNLOAD_OFFICIAL_APK-v1.0.0_(DIRECT)-00C853?style=for-the-badge&logo=android&logoColor=white" alt="Download Official APK" height="48">
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://github.com/0xrohitsen/PrivateVPN/releases/latest">
+    <img src="https://img.shields.io/badge/📦_GITHUB_RELEASES-LATEST_STABLE-6200EA?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Releases" height="48">
+  </a>
+</p>
+
+> [!TIP]
+> **Quick Install:** After downloading `PrivateVPN-v1.0.0.apk`, tap the downloaded file to install on your Android device. Ensure *"Install from unknown sources"* is permitted for your browser/file manager.
 
 ### ⚙️ 2. Configuration Options
 
